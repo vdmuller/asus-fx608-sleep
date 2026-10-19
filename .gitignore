@@ -1,0 +1,25 @@
+*.ko
+*.o
+*.mod
+*.mod.c
+*.mod.o
+*.order
+*.symvers
+.*.cmd
+.*.o
+.tmp_versions/
+Module.symvers
+modules.order
+dist/
+
+# Local credentials, certificates and diagnostic artifacts
+.env
+.env.*
+*.pem
+*.key
+*.priv
+*.der
+*.p12
+*.pfx
+*.log
+__pycache__/
