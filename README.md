@@ -58,8 +58,7 @@ the FX608JHR investigated here.
 - Linux headers matching the target kernel
 - `make`, a C compiler, and `dkms`
 - `shellcheck` for lifecycle checks and Python 3 for staging tests
-- The existing DKMS signing key and enrolled MOK certificate used by
-  `asus-fan-ec-driver` for Secure Boot
+- A DKMS signing key and enrolled MOK certificate for Secure Boot
 
 The source installation uses DKMS to rebuild for kernel updates. A successful build after
 an update does not validate the hardware behavior: test wake again. BIOS
@@ -69,8 +68,8 @@ require wake validation.
 
 ## Build and checks
 
-Run from this checkout, using the same source + DKMS workflow as
-`asus-fan-ec-driver`. No Debian package is generated.
+Run from this checkout. The project uses source installation through DKMS.
+No Debian package is generated.
 
 ```bash
 make
@@ -96,7 +95,7 @@ dkms status -m asus-fx608-sleep
 
 The installer copies sources to `/usr/src/asus-fx608-sleep-0.1.2`, registers and
 installs DKMS for the running kernel, and writes
-`/etc/modules-load.d/asus-fx608-sleep.conf`, following `asus-fan-ec-driver`.
+`/etc/modules-load.d/asus-fx608-sleep.conf`.
 It does not load the module. Autoload takes effect on the next boot. After
 reviewing the signing status, activate explicitly:
 
@@ -120,34 +119,30 @@ hooks, using the same system signing configuration. For other installed kernels:
 sudo dkms autoinstall -k 7.0.0-34-generic
 ```
 
-### Secure Boot and the shared certificate
+### Secure Boot and module signing
 
-As in `asus-fan-ec-driver`, signing belongs to native DKMS. Neither lifecycle
-script nor `dkms.conf` defines a private key, invokes `sign-file`, generates a
-project certificate or enrolls a MOK. Both drivers use the system DKMS signing
-configuration. Preserve that configuration and its existing key pair so rebuilds
+Signing belongs to native DKMS. Neither lifecycle script nor `dkms.conf`
+defines a private key, invokes `sign-file`, generates a project certificate or
+enrolls a MOK. The module uses the system DKMS signing configuration. Preserve that configuration and its existing key pair so rebuilds
 continue to use the same certificate.
 
 Check the real DKMS installation output for the signing key and public
 certificate actually used. On Ubuntu, typical existing paths are
 `/var/lib/shim-signed/mok/MOK.priv` and
-`/var/lib/shim-signed/mok/MOK.der`. Compare with the configuration used for
-`asus-fan-ec-driver`; inspect `/etc/dkms/framework.conf` and its fragments if
-needed. Reuse the existing pair rather than generating or replacing keys.
+`/var/lib/shim-signed/mok/MOK.der`. Inspect `/etc/dkms/framework.conf` and
+its fragments to confirm the configured paths. Reuse the existing pair rather than generating or replacing keys.
 The project does not override this shared system configuration.
 
-After installation, compare the installed modules for the running kernel:
+After installation, inspect the module signature for the running kernel:
 
 ```bash
-modinfo -k "$(uname -r)" -F signer asus_fan_ec
 modinfo -k "$(uname -r)" -F signer asus_fx608_sleep
-modinfo -k "$(uname -r)" -F sig_key asus_fan_ec
 modinfo -k "$(uname -r)" -F sig_key asus_fx608_sleep
 mokutil --sb-state
 sudo mokutil --test-key /var/lib/shim-signed/mok/MOK.der
 ```
 
-Require a nonempty signature and matching identity. These metadata checks do
+Require a nonempty signature and confirm that DKMS used the intended certificate. These metadata checks do
 not cryptographically prove certificate identity or kernel trust; the DKMS
 signing output identifies the selected certificate, and successful loading with
 Secure Boot enabled tests acceptance by the running kernel. Actual signing and

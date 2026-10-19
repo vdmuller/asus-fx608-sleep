@@ -2,15 +2,15 @@
 
 ## 2026-10-19: source + DKMS lifecycle, version 0.1.1
 
-The owner requested no Debian packages and the same installation/signing
-patterns as the neighboring `asus-fan-ec-driver`. Adopted Kbuild, W=1 builds,
+The owner requested source installation through native DKMS without Debian
+packages. Adopted Kbuild, W=1 builds,
 install/uninstall scripts, source ownership/checksum manifests, collision
 rejection, idempotent lifecycle and modules-load.d autoload. Removed Debian
 packaging and the systemd service. Existing package installations must be
 removed with their package manager before source installation.
 
 Signing is delegated to system DKMS without project key overrides, manual
-signing or enrollment. Both drivers reuse the shared DKMS configuration;
+signing or enrollment. The module uses the system DKMS configuration;
 preserve it across kernel updates. Machine-specific certificate identifiers,
 private keys and local account details must not be published.
 

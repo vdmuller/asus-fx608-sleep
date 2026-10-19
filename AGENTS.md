@@ -7,11 +7,11 @@ ACPI behavior, DMI scope, signing assumptions or the installation lifecycle.
   independent of BIOS revision. Do not add a force flag or broaden model support
   based only on similar symptoms. BIOS changes require hardware revalidation.
 - Distribute source through native DKMS; do not add Debian packaging.
-- Follow the neighboring asus-fan-ec-driver lifecycle conventions: Kbuild,
+- Use Kbuild and the source installation lifecycle conventions:
   install/uninstall scripts, source ownership/checksum manifests, same-version
   collision refusal and modules-load.d autoload without loading at install.
 - Delegate signing to the shared system DKMS configuration. Preserve the existing
-  certificate/key used by asus-fan-ec-driver. Never generate project signing
+  DKMS certificate/key. Never generate project signing
   keys, copy private keys, sign manually or change enrollment in lifecycle scripts.
 - Bump VERSION, dkms.conf, both lifecycle scripts and MODULE_VERSION together
   when changing installed sources. Update docs/decisions.md for behavior changes.
