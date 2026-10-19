@@ -11,15 +11,14 @@
 static bool wake_mask_enabled;
 static bool wake_capability_added;
 
-/* A firmware or BIOS change must be investigated before broadening this. */
+/* Match the exact machine model independently of its BIOS revision. */
 static const struct dmi_system_id fx608_sleep_dmi[] __initconst = {
 	{
-		.ident = "ASUS TUF Gaming F16 FX608JHR, BIOS 312",
+		.ident = "ASUS TUF Gaming F16 FX608JHR",
 		.matches = {
 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME,
 					"ASUS TUF Gaming F16 FX608JHR_FX608JHR"),
-			DMI_EXACT_MATCH(DMI_BIOS_VERSION, "FX608JHR.312"),
 		},
 	},
 	{}
@@ -32,7 +31,7 @@ static int __init asus_fx608_sleep_init(void)
 	acpi_status status;
 
 	if (!dmi_check_system(fx608_sleep_dmi)) {
-		pr_err(DRIVER_NAME ": unsupported DMI or BIOS; refusing to load\n");
+		pr_err(DRIVER_NAME ": unsupported machine model; refusing to load\n");
 		return -ENODEV;
 	}
 
@@ -90,6 +89,6 @@ module_init(asus_fx608_sleep_init);
 module_exit(asus_fx608_sleep_exit);
 
 MODULE_AUTHOR("ASUS FX608 sleep workaround contributors");
-MODULE_DESCRIPTION("GPE14 s2idle wake workaround for ASUS TUF F16 FX608JHR BIOS 312");
+MODULE_DESCRIPTION("GPE14 s2idle wake workaround for ASUS TUF F16 FX608JHR");
 MODULE_LICENSE("GPL");
-MODULE_VERSION("0.1.1");
+MODULE_VERSION("0.1.2");

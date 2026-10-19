@@ -1,7 +1,7 @@
 # Owner-assisted hardware validation
 
 1. Record board, BIOS, kernel and Secure Boot state. Retain the exact README
-   DMI/BIOS support boundary and keep USB input available for recovery.
+   vendor/product support boundary and keep USB input available for recovery.
 2. Run `make test` and `make check`, then `sudo make install`. Check DKMS's
    reported signing paths against the existing fan driver's key/certificate.
 3. Compare installed signature metadata as described in README and confirm

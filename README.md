@@ -1,10 +1,11 @@
 # ASUS FX608 Sleep
 
 Experimental DKMS workaround for an `s2idle` wake failure on the ASUS TUF
-Gaming F16 FX608JHR running BIOS `FX608JHR.312`.
+Gaming F16 FX608JHR. Loading is restricted to the exact machine model,
+independently of BIOS revision.
 
 It is not a general ASUS sleep fix. The module refuses to load on a different
-system vendor, product name, or BIOS version.
+system vendor or product name.
 
 ## What it fixes
 
@@ -61,9 +62,10 @@ the FX608JHR investigated here.
   `asus-fan-ec-driver` for Secure Boot
 
 The source installation uses DKMS to rebuild for kernel updates. A successful build after
-an update does not validate the hardware behavior: test wake again. A BIOS
-change intentionally prevents the module from loading until the new tables
-and GPE routing have been investigated.
+an update does not validate the hardware behavior: test wake again. BIOS
+updates do not prevent loading, but may change ACPI tables and GPE routing.
+The hardware evidence above covers BIOS `FX608JHR.312`; other revisions still
+require wake validation.
 
 ## Build and checks
 
@@ -92,7 +94,7 @@ sudo make install
 dkms status -m asus-fx608-sleep
 ```
 
-The installer copies sources to `/usr/src/asus-fx608-sleep-0.1.1`, registers and
+The installer copies sources to `/usr/src/asus-fx608-sleep-0.1.2`, registers and
 installs DKMS for the running kernel, and writes
 `/etc/modules-load.d/asus-fx608-sleep.conf`, following `asus-fan-ec-driver`.
 It does not load the module. Autoload takes effect on the next boot. After

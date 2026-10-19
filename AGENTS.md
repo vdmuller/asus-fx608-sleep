@@ -3,8 +3,9 @@
 Read README.md, docs/decisions.md and docs/hardware-validation.md before changing
 ACPI behavior, DMI scope, signing assumptions or the installation lifecycle.
 
-- Keep the exact FX608JHR BIOS .312 match and GPE14 boundary. Do not add a force
-  flag or broaden support based only on similar symptoms.
+- Keep the exact ASUS vendor and FX608JHR product match and GPE14 boundary,
+  independent of BIOS revision. Do not add a force flag or broaden model support
+  based only on similar symptoms. BIOS changes require hardware revalidation.
 - Distribute source through native DKMS; do not add Debian packaging.
 - Follow the neighboring asus-fan-ec-driver lifecycle conventions: Kbuild,
   install/uninstall scripts, source ownership/checksum manifests, same-version

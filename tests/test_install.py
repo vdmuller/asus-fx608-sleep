@@ -57,14 +57,14 @@ def main():
             assert (result.returncode == 0) == success, result.stdout + result.stderr
             return result
 
-        dest = root / "usr/src/asus-fx608-sleep-0.1.1"
+        dest = root / "usr/src/asus-fx608-sleep-0.1.2"
         autoload = root / "etc/modules-load.d/asus-fx608-sleep.conf"
         state = root / "var/lib/dkms/state.json"
         run("install.sh", False, SLEEP_TEST_FAIL="install")
         assert dest.exists() and not autoload.exists()
         run("install.sh")
         assert autoload.read_text() == "asus_fx608_sleep\n"
-        assert (dest / ".sleep-owned").read_text() == "asus-fx608-sleep 0.1.1\n"
+        assert (dest / ".sleep-owned").read_text() == "asus-fx608-sleep 0.1.2\n"
         assert (dest / ".sleep-manifest").is_file()
         contents = (dest / "src/asus_fx608_sleep.c").read_bytes()
         run("install.sh")
@@ -74,7 +74,7 @@ def main():
         install_calls = [call for call in calls if "install" in call]
         assert install_calls and all("-k" in call for call in install_calls)
         assert (dest / "dkms.conf").read_text() == (PROJECT / "dkms.conf").read_text()
-        assert (dest / "VERSION").read_text().strip() == "0.1.1"
+        assert (dest / "VERSION").read_text().strip() == "0.1.2"
         assert not (root / "etc/systemd/system").exists()
         (dest / "src/asus_fx608_sleep.c").write_bytes(contents + b"\n/* local edit */\n")
         run("install.sh", False)

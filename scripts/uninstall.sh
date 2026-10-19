@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PACKAGE=asus-fx608-sleep
-VERSION=0.1.1
+VERSION=0.1.2
 ROOT=/
 die() { printf '%s\n' "$*" >&2; exit 1; }
 if [[ $# -ne 0 ]]; then
